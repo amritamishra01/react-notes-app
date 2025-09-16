@@ -138,3 +138,12 @@ Add screenshots here for login, dashboard, notes page.
 
 Pull requests are welcome. For major changes, open an issue first to discuss what you would like to change.
 
+
+
+---License
+
+This project is licensed under the MIT License.
+
+Would you like me to also **add screenshots placeholders with markdown image tags** (so you just upload images later), or keep it clean text only?
+
+
