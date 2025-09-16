@@ -156,13 +156,58 @@
 // });
 
 
-const express = require("express");
-const cors = require("cors");
-const { connection } = require("./db");
-const { userRouter } = require("./routes/user_routes");
-const { noteRouter } = require("./routes/note_routes");
-const tenantRouter = require("./routes/tenant_routes");
-require("dotenv").config();
+// const express = require("express");
+// const cors = require("cors");
+// const { connection } = require("./db");
+// const { userRouter } = require("./routes/user_routes");
+// const { noteRouter } = require("./routes/note_routes");
+// const tenantRouter = require("./routes/tenant_routes");
+// require("dotenv").config();
+
+// const port = process.env.PORT || 5000;
+// const app = express();
+
+// app.use(cors());
+// app.use(express.json());
+
+// // Routes
+// app.use("/user", userRouter);
+// app.use("/note", noteRouter);
+// app.use("/tenant", tenantRouter);
+
+// // Health check
+// app.get("/health", (req, res) => {
+//   res.json({ status: "ok" });
+// });
+
+// // Root
+// app.get("/", (req, res) => {
+//   res.send({ message: "API is working now" });
+// });
+
+// // Start server only after DB connection
+// connection
+//   .then(() => {
+//     console.log("✅ MongoDB connected");
+//     app.listen(port, () => {
+//       console.log(`🚀 Server running on port ${port}`);
+//     });
+//   })
+//   .catch((err) => {
+//     console.error("❌ Failed to connect to MongoDB:", err);
+//     process.exit(1);
+//   });
+
+
+import express from "express";
+import cors from "cors";
+import connectDB from "./db.js";   // ✅ use the connect function
+import { userRouter } from "./routes/user_routes.js";
+import { noteRouter } from "./routes/note_routes.js";
+import tenantRouter from "./routes/tenant_routes.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const port = process.env.PORT || 5000;
 const app = express();
@@ -185,15 +230,9 @@ app.get("/", (req, res) => {
   res.send({ message: "API is working now" });
 });
 
-// Start server only after DB connection
-connection
-  .then(() => {
-    console.log("✅ MongoDB connected");
-    app.listen(port, () => {
-      console.log(`🚀 Server running on port ${port}`);
-    });
-  })
-  .catch((err) => {
-    console.error("❌ Failed to connect to MongoDB:", err);
-    process.exit(1);
+// Start server only after DB is connected
+connectDB().then(() => {
+  app.listen(port, () => {
+    console.log(`🚀 Server is running on port ${port}`);
   });
+});
