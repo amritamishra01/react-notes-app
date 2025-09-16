@@ -168,7 +168,9 @@ userRouter.post("/invite", async (req, res) => {
     if (!token) return res.status(401).send({ message: "Missing token", status: 0 });
 
     // verify token
-    const decoded = jwt.verify(token, "your_secret_key");
+    // const decoded = jwt.verify(token, "your_secret_key");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     const inviter = await UserModel.findById(decoded.userID).populate("tenantId");
 
     if (!inviter) {
@@ -254,15 +256,24 @@ userRouter.post("/login", async (req, res) => {
     }
 
     // 🔑 Add tenant + role into JWT
-    let token = jwt.sign(
-      {
-        userID: user._id,
-        tenantId: user.tenantId?._id,
-        role: user.role,
-      },
-      "your_secret_key",
-      option
-    );
+    // let token = jwt.sign(
+    //   {
+    //     userID: user._id,
+    //     tenantId: user.tenantId?._id,
+    //     role: user.role,
+    //   },
+    //   "your_secret_key",
+    //   option
+    // );
+let token = jwt.sign(
+  {
+    userID: user._id,
+    tenantId: user.tenantId?._id,
+    role: user.role,
+  },
+  process.env.JWT_SECRET,
+  option
+);
 
     // Send full user object
     res.send({
