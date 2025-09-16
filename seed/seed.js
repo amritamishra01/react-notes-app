@@ -388,7 +388,7 @@ const bcrypt = require("bcrypt");
 
 const Tenant = require("../models/Tenant");
 const { UserModel } = require("../models/UserModel");
-const { NoteModel } = require("../models/noteModel"); // ✅ Correct note model
+const { NoteModel } = require("../models/NoteModel"); // ✅ Correct note model
 
 const MONGO = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/notesapp_seed";
 
