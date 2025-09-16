@@ -115,6 +115,47 @@
 
 
 
+// const express = require("express");
+// const cors = require("cors");
+// const { connection } = require("./db");
+// const { userRouter } = require("./routes/user_routes");
+// const { noteRouter } = require("./routes/note_routes");
+// const tenantRouter = require("./routes/tenant_routes");
+// require("dotenv").config();
+
+// const port = process.env.PORT || 5000;
+// const app = express();
+
+// app.use(cors());
+// app.use(express.json());
+
+// // Routes
+// app.use("/user", userRouter);   // contains register + login
+// app.use("/note", noteRouter);
+// app.use("/tenant", tenantRouter);
+
+// // Health check
+// app.get("/health", (req, res) => {
+//   res.json({ status: "ok" });
+// });
+
+// // Root
+// app.get("/", (req, res) => {
+//   res.send({ message: "API is working now" });
+// });
+
+// // Start server
+// app.listen(port, async () => {
+//   try {
+//     await connection;
+//     console.log("DB connected");
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   console.log(`Server is running on port ${port}`);
+// });
+
+
 const express = require("express");
 const cors = require("cors");
 const { connection } = require("./db");
@@ -130,7 +171,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/user", userRouter);   // contains register + login
+app.use("/user", userRouter);
 app.use("/note", noteRouter);
 app.use("/tenant", tenantRouter);
 
@@ -144,13 +185,15 @@ app.get("/", (req, res) => {
   res.send({ message: "API is working now" });
 });
 
-// Start server
-app.listen(port, async () => {
-  try {
-    await connection;
-    console.log("DB connected");
-  } catch (error) {
-    console.log(error);
-  }
-  console.log(`Server is running on port ${port}`);
-});
+// Start server only after DB connection
+connection
+  .then(() => {
+    console.log("✅ MongoDB connected");
+    app.listen(port, () => {
+      console.log(`🚀 Server running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("❌ Failed to connect to MongoDB:", err);
+    process.exit(1);
+  });
