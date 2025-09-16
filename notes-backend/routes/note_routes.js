@@ -367,6 +367,221 @@
 
 
 
+// const express = require("express");
+// const { NoteModel } = require("../models/NoteModel");
+// const { authenticator } = require("../middleware/auth");
+// const TenantModel = require("../models/Tenant");
+
+// const noteRouter = express.Router();
+
+// // ✅ Apply middleware once for all note routes
+// noteRouter.use(authenticator);
+
+// // -------------------- GET Notes --------------------
+// noteRouter.get("/", async (req, res) => {
+//   try {
+//     console.log("✅ Fetching notes for user:", req.user.id, "Tenant:", req.user.tenantId);
+
+//     const notes = await NoteModel.find({
+//       user: req.user.id,
+//       tenantId: req.user.tenantId,
+//     });
+
+//     res.send({
+//       data: notes,
+//       message: "Notes fetched successfully",
+//       status: 1,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching notes:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// // -------------------- CREATE Note --------------------
+// noteRouter.post("/create", async (req, res) => {
+//   try {
+//     console.log("✏️ Creating note for tenant:", req.user.tenantId);
+
+//     // Check tenant plan
+//     const tenant = await TenantModel.findById(req.user.tenantId);
+//     const existingNotes = await NoteModel.countDocuments({ tenantId: req.user.tenantId });
+
+//     if (tenant.plan === "FREE" && existingNotes >= 3) {
+//       return res.status(403).send({
+//         message: "Free plan limit reached (max 3 notes). Upgrade to Pro.",
+//         status: 0,
+//       });
+//     }
+
+//     const note = new NoteModel({
+//       ...req.body,
+//       user: req.user.id,
+//       tenantId: req.user.tenantId,
+//     });
+
+//     await note.save();
+
+//     res.send({
+//       message: "Note created successfully",
+//       status: 1,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error creating note:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// // -------------------- UPDATE Note --------------------
+// noteRouter.patch("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     console.log("♻️ Updating note:", id, "for tenant:", req.user.tenantId);
+
+//     await NoteModel.findOneAndUpdate(
+//       { _id: id, tenantId: req.user.tenantId },
+//       req.body
+//     );
+
+//     res.send({ message: "Note updated", status: 1 });
+//   } catch (error) {
+//     console.error("❌ Error updating note:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// // -------------------- DELETE Note --------------------
+// noteRouter.delete("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     console.log("🗑️ Deleting note:", id, "for tenant:", req.user.tenantId);
+
+//     await NoteModel.findOneAndDelete({ _id: id, tenantId: req.user.tenantId });
+
+//     res.send({ message: "Note deleted", status: 1 });
+//   } catch (error) {
+//     console.error("❌ Error deleting note:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// module.exports = { noteRouter };
+
+
+// const express = require("express");
+// const { NoteModel } = require("../models/NoteModel");
+// const { authenticator } = require("../middleware/auth");
+// const TenantModel = require("../models/Tenant");
+
+// const noteRouter = express.Router();
+
+// // ✅ Apply middleware once for all note routes
+// noteRouter.use(authenticator);
+
+// // -------------------- GET Notes --------------------
+// noteRouter.get("/", async (req, res) => {
+//   try {
+//     console.log("✅ Fetching notes for Tenant:", req.user.tenantId);
+
+//     // ✅ Members should see all notes in their tenant (not just their own)
+//     const notes = await NoteModel.find({
+//       tenantId: req.user.tenantId,
+//     });
+
+//     res.send({
+//       data: notes,
+//       message: "Notes fetched successfully",
+//       status: 1,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error fetching notes:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// // -------------------- CREATE Note --------------------
+// noteRouter.post("/create", async (req, res) => {
+//   try {
+//     console.log("✏️ Creating note for tenant:", req.user.tenantId);
+
+//     // Check tenant plan
+//     const tenant = await TenantModel.findById(req.user.tenantId);
+//     const existingNotes = await NoteModel.countDocuments({ tenantId: req.user.tenantId });
+
+//     if (tenant.plan === "FREE" && existingNotes >= 3) {
+//       return res.status(403).send({
+//         message: "Free plan limit reached (max 3 notes). Upgrade to Pro.",
+//         status: 0,
+//       });
+//     }
+
+//     const note = new NoteModel({
+//       ...req.body,
+//       user: req.user.id,
+//       tenantId: req.user.tenantId,
+//     });
+
+//     await note.save();
+
+//     res.send({
+//       message: "Note created successfully",
+//       status: 1,
+//     });
+//   } catch (error) {
+//     console.error("❌ Error creating note:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// // -------------------- UPDATE Note --------------------
+// noteRouter.patch("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     console.log("♻️ Updating note:", id, "for tenant:", req.user.tenantId);
+
+//     await NoteModel.findOneAndUpdate(
+//       { _id: id, tenantId: req.user.tenantId },
+//       req.body
+//     );
+
+//     res.send({ message: "Note updated", status: 1 });
+//   } catch (error) {
+//     console.error("❌ Error updating note:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// // -------------------- DELETE Note --------------------
+// noteRouter.delete("/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     console.log("🗑️ Deleting note:", id, "for tenant:", req.user.tenantId);
+
+//     await NoteModel.findOneAndDelete({ _id: id, tenantId: req.user.tenantId });
+
+//     res.send({ message: "Note deleted", status: 1 });
+//   } catch (error) {
+//     console.error("❌ Error deleting note:", error.message);
+//     res.send({ message: error.message, status: 0 });
+//   }
+// });
+
+// module.exports = { noteRouter };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const express = require("express");
 const { NoteModel } = require("../models/NoteModel");
 const { authenticator } = require("../middleware/auth");
@@ -378,12 +593,12 @@ const noteRouter = express.Router();
 noteRouter.use(authenticator);
 
 // -------------------- GET Notes --------------------
+// Members + Admins → should see ALL notes for their tenant
 noteRouter.get("/", async (req, res) => {
   try {
-    console.log("✅ Fetching notes for user:", req.user.id, "Tenant:", req.user.tenantId);
+    console.log("✅ Fetching notes for Tenant:", req.user.tenantId);
 
     const notes = await NoteModel.find({
-      user: req.user.id,
       tenantId: req.user.tenantId,
     });
 
@@ -394,16 +609,17 @@ noteRouter.get("/", async (req, res) => {
     });
   } catch (error) {
     console.error("❌ Error fetching notes:", error.message);
-    res.send({ message: error.message, status: 0 });
+    res.status(500).send({ message: error.message, status: 0 });
   }
 });
 
 // -------------------- CREATE Note --------------------
+// Both Admin + Member can create
 noteRouter.post("/create", async (req, res) => {
   try {
     console.log("✏️ Creating note for tenant:", req.user.tenantId);
 
-    // Check tenant plan
+    // ✅ Enforce tenant subscription plan
     const tenant = await TenantModel.findById(req.user.tenantId);
     const existingNotes = await NoteModel.countDocuments({ tenantId: req.user.tenantId });
 
@@ -416,52 +632,67 @@ noteRouter.post("/create", async (req, res) => {
 
     const note = new NoteModel({
       ...req.body,
-      user: req.user.id,
       tenantId: req.user.tenantId,
+      user: req.user.id, // record who created it
     });
 
     await note.save();
 
     res.send({
+      data: note,
       message: "Note created successfully",
       status: 1,
     });
   } catch (error) {
     console.error("❌ Error creating note:", error.message);
-    res.send({ message: error.message, status: 0 });
+    res.status(500).send({ message: error.message, status: 0 });
   }
 });
 
 // -------------------- UPDATE Note --------------------
+// Both Admin + Member can update, but only inside their tenant
 noteRouter.patch("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     console.log("♻️ Updating note:", id, "for tenant:", req.user.tenantId);
 
-    await NoteModel.findOneAndUpdate(
+    const updated = await NoteModel.findOneAndUpdate(
       { _id: id, tenantId: req.user.tenantId },
-      req.body
+      req.body,
+      { new: true }
     );
 
-    res.send({ message: "Note updated", status: 1 });
+    if (!updated) {
+      return res.status(404).send({ message: "Note not found", status: 0 });
+    }
+
+    res.send({ data: updated, message: "Note updated", status: 1 });
   } catch (error) {
     console.error("❌ Error updating note:", error.message);
-    res.send({ message: error.message, status: 0 });
+    res.status(500).send({ message: error.message, status: 0 });
   }
 });
 
 // -------------------- DELETE Note --------------------
+// Both Admin + Member can delete, but only inside their tenant
 noteRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     console.log("🗑️ Deleting note:", id, "for tenant:", req.user.tenantId);
 
-    await NoteModel.findOneAndDelete({ _id: id, tenantId: req.user.tenantId });
+    const deleted = await NoteModel.findOneAndDelete({
+      _id: id,
+      tenantId: req.user.tenantId,
+    });
+
+    if (!deleted) {
+      return res.status(404).send({ message: "Note not found", status: 0 });
+    }
 
     res.send({ message: "Note deleted", status: 1 });
   } catch (error) {
     console.error("❌ Error deleting note:", error.message);
-    res.send({ message: error.message, status: 0 });
+    res.status(500).send({ message: error.message, status: 0 });
   }
 });
 
